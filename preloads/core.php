@@ -23,7 +23,16 @@ class TadtoolsCorePreload extends XoopsPreloadItem
             } else {
                 $theme_config = Tools::import_theme_json($theme_name);
             }
-            $_SESSION['bootstrap'] = strpos($theme_config['theme_kind'], 'bootstrap') !== false ? substr($theme_config['theme_kind'], -1) : 5;
+
+            if ($theme_name == 'school2022') {
+                $_SESSION['bootstrap'] = 5;
+            } elseif ($theme_name == 'school2019') {
+                $_SESSION['bootstrap'] = 4;
+            } elseif ($theme_name == 'school2015' || $theme_name == 'school2014' || $theme_name == 'school2013') {
+                $_SESSION['bootstrap'] = 3;
+            } else {
+                $_SESSION['bootstrap'] = strpos($theme_config['theme_kind'], 'bootstrap') !== false ? substr($theme_config['theme_kind'], -1) : 5;
+            }
 
             $WebID = isset($_REQUEST['WebID']) ? (int) $_REQUEST['WebID'] : 0;
             if (!empty($WebID) and false !== mb_strpos($_SERVER['PHP_SELF'], 'modules/tad_web') and false !== mb_strpos($_SERVER['REQUEST_URI'], '?WebID=')) {
@@ -88,7 +97,16 @@ class TadtoolsCorePreload extends XoopsPreloadItem
         if (!empty($WebID) and false !== mb_strpos($_SERVER['PHP_SELF'], 'modules/tad_web') and false !== mb_strpos($_SERVER['REQUEST_URI'], '?WebID=')) {
             $_SESSION['bootstrap'] = 5;
         } else {
-            $_SESSION['bootstrap'] = strpos($theme_config['theme_kind'], 'bootstrap') !== false ? substr($theme_config['theme_kind'], -1) : 5;
+            if ($theme_name == 'school2022') {
+                $_SESSION['bootstrap'] = 5;
+            } elseif ($theme_name == 'school2019') {
+                $_SESSION['bootstrap'] = 4;
+            } elseif ($theme_name == 'school2015' || $theme_name == 'school2014' || $theme_name == 'school2013') {
+                $_SESSION['bootstrap'] = 3;
+            } else {
+                $_SESSION['bootstrap'] = strpos($theme_config['theme_kind'], 'bootstrap') !== false ? substr($theme_config['theme_kind'], -1) : 5;
+            }
+
         }
         $xoopsTpl->assign('bootstrap', $_SESSION['bootstrap']);
 

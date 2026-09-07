@@ -975,11 +975,21 @@ class Utility
         $_SESSION['theme_kind']                    = $tt_theme_kind;
         $_SESSION[$theme_set]['bootstrap_version'] = $tt_theme_kind;
 
-        if (strpos((string) isset($tt_theme_kind) ?: '', 'bootstrap') !== false) {
-            $_SESSION['bootstrap'] = substr($tt_theme_kind, -1);
+        if ($theme_set == 'school2022') {
+            $_SESSION['bootstrap'] = 5;
+        } elseif ($theme_set == 'school2019') {
+            $_SESSION['bootstrap'] = 4;
+        } elseif ($theme_set == 'school2015' || $theme_set == 'school2014' || $theme_set == 'school2013') {
+            $_SESSION['bootstrap'] = 3;
         } else {
-            $_SESSION['bootstrap'] = '5';
+            $_SESSION['bootstrap'] = strpos($tt_theme_kind, 'bootstrap') !== false ? substr($tt_theme_kind, -1) : 5;
         }
+
+        // if (strpos((string) isset($tt_theme_kind) ?: '', 'bootstrap') !== false) {
+        //     $_SESSION['bootstrap'] = substr($tt_theme_kind, -1);
+        // } else {
+        //     $_SESSION['bootstrap'] = '5';
+        // }
 
         if ($in_admin) {
             if ($xoopsTpl) {
@@ -1484,6 +1494,8 @@ class Utility
     public static function getPageBar($sql = '', $show_num = 20, $page_list = 10, $to_page = '', $url_other = '', $bootstrap = '', $g2p_name = 'g2p', $order_sql = '')
     {
         global $xoopsDB;
+        $show_num  = (int) $show_num;
+        $page_list = (int) $page_list;
         if (empty($show_num)) {
             $show_num = 20;
         }
@@ -1495,6 +1507,19 @@ class Utility
         if (empty($bootstrap)) {
             $bootstrap = isset($_SESSION['bootstrap']) ? $_SESSION['bootstrap'] : self::get_bootstrap();
         }
+
+        // 改用子查詢來計算總數，避免 SQL 語法錯誤
+        // $baseSql = rtrim(trim($sql), " \t\n\r\0\x0B;");
+
+        // $countSql    = "SELECT COUNT(*) AS total FROM ({$baseSql}) AS page_count";
+        // $countResult = $xoopsDB->query($countSql);
+
+        // if (!$countResult) {
+        //     redirect_header($_SERVER['PHP_SELF'], 10, $xoopsDB->error() . '<br>' . __FILE__ . ':' . __LINE__ . "<br>{$countSql}");
+        // }
+
+        // $countRow = $xoopsDB->fetchArray($countResult);
+        // $total    = (int) ($countRow['total'] ?? 0);
 
         $result = $xoopsDB->query($sql) or redirect_header($_SERVER['PHP_SELF'], 10, $xoopsDB->error() . '<br>' . __FILE__ . ':' . __LINE__ . "<br>$sql");
         $total  = $xoopsDB->getRowsNum($result);
